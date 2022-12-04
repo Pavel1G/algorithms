@@ -2,16 +2,16 @@ package org.example.algorithms1;
 
 import java.util.Arrays;
 
-public class SelfWrittenArrayList implements StringList {
+public class SelfWrittenArrayListString implements StringList {
 
     private final String[] storage;
     private int size;
 
-    public SelfWrittenArrayList() {
+    public SelfWrittenArrayListString() {
         storage = new String[10];
     }
 
-    public SelfWrittenArrayList(int size) {
+    public SelfWrittenArrayListString(int size) {
         storage = new String[size];
     }
 
