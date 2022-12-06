@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class SelfWrittenArrayListInteger implements IntegerList {
 
-    private final Integer[] storage;
+    private Integer[] storage;
     private int size;
 
     public SelfWrittenArrayListInteger() {
@@ -23,7 +23,7 @@ public class SelfWrittenArrayListInteger implements IntegerList {
     @Override
     public Integer add(Integer num) {
         if (size == storage.length) {
-            new InvalidSizeException("Массив полон");
+            grow();
         }
         if (num == null) {
             new InvalidItemException("Некорректное число.");
@@ -35,7 +35,7 @@ public class SelfWrittenArrayListInteger implements IntegerList {
     @Override
     public Integer add(int index, Integer num) {
         if (size == storage.length) {
-            new InvalidSizeException("Массив полон");
+            grow();
         }
         if (num == null) {
             new InvalidItemException("Некорректное число.");
@@ -163,15 +163,38 @@ public class SelfWrittenArrayListInteger implements IntegerList {
     }
 
     private void sort(Integer[] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            int temp = arr[i];
-            int j = i;
-            while (j > 0 && arr[j - 1] >= temp) {
-                arr[j] = arr[j - 1];
-                j--;
-            }
-            arr[j] = temp;
+        quickSort(arr, 0, arr.length - 1);
+    }
+
+    private void quickSort(Integer[] arr, int beginIndex, int endIndex) {
+        if (beginIndex < endIndex) {
+            int middleIndex = partition(arr, beginIndex, endIndex);
+
+            quickSort(arr, beginIndex, middleIndex - 1);
+            quickSort(arr, middleIndex + 1, endIndex);
         }
+    }
+
+    private int partition(Integer[] arr, int beginIndex, int endIndex) {
+        int pivot = arr[endIndex];
+        int i = (beginIndex - 1);
+
+        for (int j = beginIndex; j < endIndex; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, endIndex);
+        return i + 1;
+    }
+
+    private void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
     }
 
     private boolean binarySearch(Integer[] arr, Integer element) {
@@ -189,5 +212,9 @@ public class SelfWrittenArrayListInteger implements IntegerList {
             }
         }
         return false;
+    }
+
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
     }
 }
